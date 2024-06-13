@@ -11,16 +11,13 @@ export const register = catchAsyncErrors(async (req, res, next) => {
     return next(new ErrorHandler("Avatar Required!", 400));
   }
   const { avatar, resume } = req.files;
-  console.log("Avatar file details:", avatar);
-  console.log("Resume file details:", resume);
-  
+ 
   //POSTING AVATAR
   const cloudinaryResponseForAvatar = await cloudinary.uploader.upload(
     avatar.tempFilePath,
-    { folder: "PORTFOLIO AVATAR" }
+    { folder: "AVATARS" }
   );
-  console.log("Cloudinary avatar response:", cloudinaryResponseForAvatar);
-
+  
   if (!cloudinaryResponseForAvatar || cloudinaryResponseForAvatar.error) {
     console.error(
       "Cloudinary Error:",
@@ -28,8 +25,8 @@ export const register = catchAsyncErrors(async (req, res, next) => {
     );
     return next(new ErrorHandler("Failed to upload avatar to Cloudinary", 500));
   }
-  console.log("hi resume")
   //POSTING RESUME
+ 
   const cloudinaryResponseForResume = await cloudinary.uploader.upload(
     resume.tempFilePath,
     { folder: "PORTFOLIO RESUME" }
@@ -41,6 +38,7 @@ export const register = catchAsyncErrors(async (req, res, next) => {
     );
     return next(new ErrorHandler("Failed to upload resume to Cloudinary", 500));
   }
+  
   const {
     fullName,
     email,
@@ -54,6 +52,7 @@ export const register = catchAsyncErrors(async (req, res, next) => {
     facebookURL,
     linkedInURL,
   } = req.body;
+  
   const user = await User.create({
     fullName,
     email,
@@ -75,6 +74,8 @@ export const register = catchAsyncErrors(async (req, res, next) => {
       url: cloudinaryResponseForResume.secure_url, // Set your cloudinary secure_url here
     },
   });
+  
+ 
   generateToken(user, "Registered!", 201, res);
 });
 
@@ -133,27 +134,27 @@ export const updateProfile = catchAsyncErrors(async (req, res, next) => {
     const user = await User.findById(req.user.id);
     const profileImageId = user.avatar.public_id;
     await cloudinary.uploader.destroy(profileImageId);
-    const newProfileImage = await cloudinary.uploader.upload(
+    const newProfileImage = await cloudinary.uploader.upload(   //c
       avatar.tempFilePath,
       {
         folder: "PORTFOLIO AVATAR",
       }
     );
     newUserData.avatar = {
-      public_id: newProfileImage.public_id,
-      url: newProfileImage.secure_url,
+      public_id: newProfileImage.public_id,//c
+      url: newProfileImage.secure_url,     //c
     };
   }
 
   if (req.files && req.files.resume) {
     const resume = req.files.resume;
     const user = await User.findById(req.user.id);
-    const resumeFileId = user.resume.public_id;
+    const resumeFileId = user.resume.public_id; //c
     if (resumeFileId) {
-      await cloudinary.uploader.destroy(resumeFileId);
+      await cloudinary.uploader.destroy(resumeFileId);//c
     }
     const newResume = await cloudinary.uploader.upload(resume.tempFilePath, {
-      folder: "PORTFOLIO RESUME",
+      folder: "PORTFOLIO RESUME",   //c
     });
     newUserData.resume = {
       public_id: newResume.public_id,
@@ -197,7 +198,7 @@ export const updatePassword = catchAsyncErrors(async (req, res, next) => {
 });
 
 export const getUserForPortfolio = catchAsyncErrors(async (req, res, next) => {
-  const id = "663296a896e553748ab5b0be";
+  const id = "666a9e71e6771b00b04ac1af";
   const user = await User.findById(id);
   res.status(200).json({
     success: true,

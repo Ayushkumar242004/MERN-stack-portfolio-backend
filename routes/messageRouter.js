@@ -6,6 +6,6 @@ const router = express.Router();
 
 router.post("/send", sendMessage);
 router.delete("/delete/:id", isAuthenticated, deleteMessage);
-router.get("/getall", isAuthenticated, getAllMessages);
+router.get("/getall", getAllMessages);
 
 export default router;

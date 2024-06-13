@@ -33,7 +33,7 @@ export const addNewApplication = catchAsyncErrors(async (req, res, next) => {
     },
   });
   res.status(201).json({
-    success: true,
+    success: true,//c
     message: "New Software Application Added!",
     softwareApplication,
   });

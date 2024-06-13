@@ -90,7 +90,7 @@ userSchema.methods.generateJsonWebToken = function () {
 };
 
 
-//Generating Reset Password Token
+// //Generating Reset Password Token
 userSchema.methods.getResetPasswordToken = function () {
   //Generating Token
   const resetToken = crypto.randomBytes(20).toString("hex");
